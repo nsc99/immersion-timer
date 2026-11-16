@@ -66,8 +66,8 @@ def clock(intent):
 
 def now_rfc3339():
     now = action('date', WFDateActionMode='Current Date')
-    return action('format.date', WFDate=text(now), WFDateFormatStyle='Custom',
-                  WFDateFormat='Custom', WFDateFormatString=RFC3339)
+    return action('format.date', WFDate=text(now), WFDateFormatStyle='Custom', WFDateFormat=RFC3339,
+                  WFTimeFormatStyle='None')
 
 
 def ask(index, prompt, default):

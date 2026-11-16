@@ -48,6 +48,10 @@ for question in source['WFWorkflowImportQuestions']:
     assert question['ParameterKey'] == 'WFTextActionText'
 assert source['WFWorkflowClientVersion'] == versions['authoring_client']
 assert source['WFWorkflowMinimumClientVersion'] == versions['minimum_client']
+for a in source['WFWorkflowActions']:
+    if a['WFWorkflowActionIdentifier'] == 'is.workflow.actions.format.date':
+        p = a['WFWorkflowActionParameters']
+        assert p['WFDateFormatStyle'] == 'Custom' and p['WFDateFormat'] == "yyyy-MM-dd'T'HH:mm:ssZZZZZ", 'custom format goes in WFDateFormat'
 requests = [a for a in source['WFWorkflowActions'] if a['WFWorkflowActionIdentifier'] == 'is.workflow.actions.downloadurl']
 assert len(requests) == 3, 'timers query, stop mutation, create mutation'
 for request in requests:
