@@ -2,8 +2,10 @@
 
 An iOS Shortcut that toggles a [Traggo](https://traggo.net) timer with one tap, meant to run from an NFC tag.
 
-- A timer is running: stop it.
-- No timer is running: ask for a label and start one tagged `immersion=<label>`.
+- A timer is running: stop it, then stop and reset the Clock stopwatch.
+- No timer is running: ask for a label, start one tagged `immersion=<label>`, and start the Clock stopwatch.
+
+The stopwatch is the elapsed-time display: on iOS 18 and later it runs as a Live Activity on the Lock Screen, in Notification Center and in the Dynamic Island. iOS cannot name a stopwatch, so the label is only in the start notification and in Traggo.
 
 Labels: `raw video`, `raw audio`, `sub video`, `reading`. Traggo keeps the hours, dashboards group them by the `immersion` tag.
 
@@ -30,7 +32,7 @@ The phone must reach the Traggo URL: on the home network, or over Tailscale with
 
 ## How it works
 
-One GraphQL query (`timers`) tells whether a timer runs. The shortcut then sends either `stopTimeSpan` or `createTimeSpan` with the current time formatted as RFC 3339, authenticated with the `Authorization: traggo <token>` header.
+One GraphQL query (`timers`) tells whether a timer runs. The shortcut then sends either `stopTimeSpan` or `createTimeSpan` with the current time formatted as RFC 3339, authenticated with the `Authorization: traggo <token>` header. The Clock actions are the App Intents `StartStopwatchIntent`, `StopStopwatchIntent` and `ResetStopwatchIntent` of `com.apple.clock`, taken from the App Intents metadata of Apple's MobileTimerSupport framework.
 
 ## Rebuild
 

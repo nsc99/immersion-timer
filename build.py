@@ -56,6 +56,14 @@ def graphql(query):
                   WFJSONValues=dictionary({'query': query}))
 
 
+def clock(intent):
+    """Clock app intent (App Intents metadata of MobileTimerSupport.framework); stopwatch has no name."""
+    actions.append({'WFWorkflowActionIdentifier': 'com.apple.clock.' + intent, 'WFWorkflowActionParameters': {
+        'UUID': uid(), 'AppIntentDescriptor': {
+            'TeamIdentifier': '0000000000', 'BundleIdentifier': 'com.apple.clock', 'Name': 'Clock',
+            'AppIntentIdentifier': intent, 'ActionRequiresAppInstallation': True}}})
+
+
 def now_rfc3339():
     now = action('date', WFDateActionMode='Current Date')
     return action('format.date', WFDate=text(now), WFDateFormatStyle='Custom',
@@ -68,8 +76,9 @@ def ask(index, prompt, default):
 
 
 action('comment', WFCommentActionText=(
-    'Toggles a Traggo timer. Running timer: stop it. Otherwise: pick a label and start one '
-    f'tagged {TAG}=<label>. The two Text blocks below hold the Traggo URL and a device token '
+    'Toggles a Traggo timer. Running timer: stop it (and stop + reset the Clock stopwatch). Otherwise: '
+    f'pick a label, start one tagged {TAG}=<label> and start the Clock stopwatch so the elapsed time '
+    'shows in the Live Activity. The two Text blocks below hold the Traggo URL and a device token '
     '(answered on import; edit them here to change).'))
 url = action('gettext', WFTextActionText='https://traggo.example.com')
 ask(len(actions) - 1, 'Traggo URL (no trailing slash)', 'https://traggo.example.com')
@@ -88,6 +97,8 @@ timer = action('getitemfromlist', WFInput=token(timers), WFItemSpecifier='First 
 timer_id = action('getvalueforkey', WFInput=token(timer), WFDictionaryKey='id', WFGetDictionaryValueType='Value')
 end = now_rfc3339()
 graphql(text('mutation { stopTimeSpan(id: ', timer_id, ', end: "', end, '") { id } }'))
+clock('StopStopwatchIntent')
+clock('ResetStopwatchIntent')
 action('notification', WFNotificationActionBody='Immersion timer stopped', WFNotificationActionSound=False)
 
 action('conditional', GroupingIdentifier=branch, WFControlFlowMode=1)
@@ -96,6 +107,7 @@ label = action('choosefromlist', WFInput=token(labels), WFChooseFromListActionPr
 start = now_rfc3339()
 graphql(text('mutation { createTimeSpan(start: "', start, f'", tags: [{{key: "{TAG}", value: "', label,
              '"}], note: "") { id } }'))
+clock('StartStopwatchIntent')
 action('notification', WFNotificationActionBody=text('Immersion: ', label), WFNotificationActionSound=False)
 action('conditional', GroupingIdentifier=branch, WFControlFlowMode=2)
 

@@ -12,6 +12,7 @@ versions = json.loads((ROOT / 'versions.json').read_text())
 allowed = {'is.workflow.actions.' + n for n in (
     'comment', 'gettext', 'downloadurl', 'getvalueforkey', 'count', 'conditional',
     'getitemfromlist', 'date', 'format.date', 'notification', 'list', 'choosefromlist')}
+allowed.update({'com.apple.clock.' + n for n in ('StartStopwatchIntent', 'StopStopwatchIntent', 'ResetStopwatchIntent')})
 seen, stack = set(), []
 
 
