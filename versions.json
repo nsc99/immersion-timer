@@ -1,0 +1,9 @@
+{
+  "authoring_client": "4711",
+  "authoring_source": "Apple-hosted Clock reference export, https://www.icloud.com/shortcuts/e4a7ce193da44662a319ce0e5faa0fbe (same pins as ios-alarm-sync)",
+  "minimum_client": 900,
+  "icon": {
+    "WFWorkflowIconStartColor": 946986751,
+    "WFWorkflowIconGlyphNumber": 59511
+  }
+}
